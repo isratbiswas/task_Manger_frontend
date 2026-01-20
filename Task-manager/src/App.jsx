@@ -8,7 +8,7 @@ function App() {
   const token = localStorage.getItem("token");
 
   const getTasks = async () => {
-    const res = await axios.get("http://localhost:5000/api/tasks", {
+    const res = await axios.get("http://localhost:5000/api/v1/task/getTasks", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -18,17 +18,26 @@ function App() {
 
   const addTask = async () => {
     await axios.post(
-      "http://localhost:5000/api/tasks",
+      "http://localhost:5000/api/v1/task/createTask",
       { title },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
+      // {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // },
     );
     getTasks();
   };
 
   useEffect(() => {
-    getTasks();
+    const fetchTasks = async () => {
+      try {
+        const data = await getTasks(); // your existing function
+        setTasks(data); // safe to call here
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchTasks();
   }, []);
 
   return (
